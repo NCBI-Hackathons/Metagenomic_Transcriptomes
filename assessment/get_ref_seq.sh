@@ -14,7 +14,7 @@ cd data/ecoli
 wget ftp://ftp.ncbi.nlm.nih.gov/genomes/all/GCF_000012905.2_ASM1290v2/*
 
 cd ../rhodo
-wget ftp://ftp.ncbi.nlm.nih.gov/genomes/all/GCF_000012905.2_ASM1290v2/*
+wget wget ftp://ftp.ncbi.nlm.nih.gov/genomes/all/GCF_000012905.2_ASM1290v2/*
 
 cd ../prochloro
 wget -r ftp://ftp.ncbi.nlm.nih.gov/genomes/all/GCA_000011465.1_ASM1146v1/*
