@@ -1,0 +1,94 @@
+---
+title: "Generating Individual COG fasta files"
+author: "Nate Olson"
+date: "August 17, 2016"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+Code used to split COG protein sequence file into individual fasta files for each COG id. 
+COG metadata and sequence data files from `ftp://ftp.ncbi.nih.gov/pub/COG/COG2014/data`.  
+
+```{r message=FALSE, warning=FALSE}
+library(Biostrings);library(readr);library(stringr)
+library(dplyr);library(tidyr);library(purrr)
+```
+
+Loading cog metadata.  
+```{r}
+cog_ids <- read_csv("cog2003-2014.csv",col_names=FALSE)
+colnames(cog_ids) <- c("domain_id","genome_name","protein_id",
+                       "prot_len","domain_start","domain_end",
+                       "cog_id","membership_class")
+```
+Loading protein sequence data. 
+```{r}
+prot_seq <- readAAStringSet("prot2003-2014.fa.gz")
+```
+
+Parse protein ID from seq names
+```{r}
+prot_seq_names <- tibble(seq_id = names(prot_seq)) %>% 
+      mutate(protein_id = str_match(seq_id, "gi\\|.*\\|ref") %>% 
+                   str_sub(4,nchar(.)-4) %>% as.integer())
+```
+
+
+Combine into COG Df
+```{r}
+cog_df <- right_join(cog_ids, prot_seq_names)
+```
+For loop used to split prot seq file based on COG id.
+```{r}
+# for(i in unique(cog_df$cog_id)){
+#       cog_seq_names <- cog_df %>% filter(cog_id == i) %>% .$seq_id
+#       cog_seqs <- prot_seq[cog_seq_names]
+#       if(length(cog_seqs) == length(cog_seq_names)){
+#             #writeXStringSet(cog_seqs,filepath = paste0(i,".fa"))
+#       }else{
+#             print(i)
+#       }
+# }
+```
+
+Frequency of protein ids assigned to multiple COGs
+```{r}
+cog_df %>% group_by(protein_id) %>% 
+      summarise(n_cog = n_distinct(cog_id)) %>%
+      group_by(n_cog) %>% 
+      summarise(count = n())
+```
+
+Evaluating the potential for excluding proteins assigned to multiple COGs
+```{r}
+cog_seq_count <- cog_ids %>% group_by(cog_id) %>% summarise(n_seq = n_distinct(protein_id))
+```
+
+
+Filtering proteins assigned to multiple COGs
+```{r}
+cog_seq_uniq_count <- cog_ids %>% group_by(protein_id) %>% 
+      mutate(n_cog = n()) %>%
+      filter(n_cog == 1) %>% group_by(cog_id) %>% 
+      summarise(uniq_n_seq = n_distinct(protein_id))
+```
+
+```{r}
+cog_count <- left_join(cog_seq_count, cog_seq_uniq_count)
+```
+```{r}
+cog_count <- cog_count %>% 
+      mutate(uniq_n_seq = ifelse(is.na(uniq_n_seq), 0, uniq_n_seq),
+             count_diff = n_seq - uniq_n_seq)
+```
+
+36 COGs only contain sequences assigned to multiple COGs.
+```{r}
+cog_count %>% filter(uniq_n_seq == 0)
+```
+
+
+
