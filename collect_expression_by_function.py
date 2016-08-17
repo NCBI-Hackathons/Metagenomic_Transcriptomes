@@ -2,7 +2,7 @@
 
 '''
 This will read all of the isoform.results files and add expression values to functions by COG
-Take as input the COG # to function table and a directory with COG#.isoform.results files
+Take as input the COG # to function table and a directory with SRR#.COG#.isoform.results files
 '''
 import sys, os
 import pandas as pd
@@ -48,10 +48,15 @@ for line in COG:
 DIR = sys.argv[2]
 for file in os.listdir(DIR):
     if file.endswith('.isoforms.results'):
-        cog_num = file.split('.')[0]
+        cog_num = file.split('.')[1]
         results = pd.read_csv(str(DIR)+'/'+file, sep='\t')
         count = sum(results['expected_count'])
         fun = COG_function_dict[cog_num]
-        fun_dict[fun] += count
+        if len(fun) > 1:
+            fun = list(fun)
+            for i in fun:
+                fun_dict[i] += count
+        else:
+            fun_dict[fun] += count
 
 print fun_dict
