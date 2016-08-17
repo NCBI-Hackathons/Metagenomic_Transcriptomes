@@ -1,3 +1,4 @@
+
 #!/usr/bin/env python
 
 ''' 
@@ -10,13 +11,8 @@ from blast_wrapper import blast
 DIR = sys.argv[1]
 BLASTDB=sys.argv[2]
 
-for asm_dir in os.listdir(DIR):
-	if "trinity" in asm_dir:
-		print asm_dir
-		asm_file = DIR + "/" + asm_dir + "/Trinity.fasta"
-		blast_file = DIR + "/" + asm_dir + "/blastx.out"
-		if os.path.isfile(asm_file): 
-			blast(program="blastx",database=BLASTDB,input=asm_file, output=blast_file)
-		else:
-			print "No assembly file: " + asm_file
-
+for asm_file in os.listdir(DIR):
+	asm_file = DIR + "/" + asm_file 
+	if "assembled.fasta" in asm_file:
+		blast_file = asm_file.replace("assembled.fasta", "assembled.blastx.tsv")
+		blast(program="blastx",database=BLASTDB,input=asm_file, output=blast_file)
