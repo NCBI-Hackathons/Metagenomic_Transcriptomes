@@ -27,8 +27,8 @@ if __name__ == "__main__":
     elif len(sys.argv) == 5:
         DIR, PATH, left_reads, right_reads = sys.argv[1:]
         for dir in os.listdir(DIR):
-            if dir.startwith('COG'):
-                fasta = str(dir)+'/Trinity.fasta'
+            if dir.startswith('COG'):
+                fasta = dir+'/Trinity.fasta'
                 outprefix = dir.split('_')[0]
                 rsemPE(PATH, transcripts=fasta, left_reads=left_reads, right_reads=right_reads, outprefix=outprefix)
     else:
