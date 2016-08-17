@@ -52,6 +52,11 @@ for file in os.listdir(DIR):
         results = pd.read_csv(str(DIR)+'/'+file, sep='\t')
         count = sum(results['expected_count'])
         fun = COG_function_dict[cog_num]
-        fun_dict[fun] += count
+        if len(fun) > 1:
+            fun = list(fun)
+            for i in fun:
+                fun_dict[i] += count
+        else:
+            fun_dict[fun] += count
 
 print fun_dict
