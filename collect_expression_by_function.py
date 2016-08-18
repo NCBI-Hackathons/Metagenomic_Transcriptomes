@@ -3,6 +3,7 @@
 '''
 This will read all of the isoform.results files and add expression values to functions by COG
 Take as input the COG # to function table and a directory with SRR#.COG#.isoform.results files
+usage: python collect_expression_by_function.py <COG id,function map> <Directory of .isoform.results files> <outfile>
 '''
 import sys, os
 import pandas as pd
@@ -58,5 +59,4 @@ for file in os.listdir(DIR):
                 fun_dict[i] += count
         else:
             fun_dict[fun] += count
-
 print fun_dict

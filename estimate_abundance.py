@@ -23,14 +23,14 @@ if __name__ == "__main__":
             if assembly.endswith('.assembled.fasta'):
  #               fasta = str(DIR)+'/'+dir+'/Trinity.fasta'
                 outprefix = assembly.split('.')[0]+'.'+assembly.split('.')[1]
-                rsemSE(PATH, transcripts=assembly, reads=reads, outprefix=outprefix)
+                rsemSE(PATH, transcripts=DIR+'/'+assembly, reads=reads, outprefix=outprefix)
     elif len(sys.argv) == 5:
         DIR, PATH, left_reads, right_reads = sys.argv[1:]
         for assembly in os.listdir(DIR):
             if assembly.endswith('.assembled.fasta'):
 #                fasta = str(DIR)+'/'+dir+'/Trinity.fasta'
                 outprefix = assembly.split('.')[0]+'.'+assembly.split('.')[1]
-                rsemPE(PATH, transcripts=assembly, left_reads=left_reads, right_reads=right_reads, outprefix=outprefix)
+                rsemPE(PATH, transcripts=DIR+'/'+assembly, left_reads=left_reads, right_reads=right_reads, outprefix=outprefix)
     else:
         print "usage: python estimate_abundance.py <DIR with Trinity output directories> <PATH to Trinity 'align_and_estimate_abundance.pl'> <fastq file/s>"
         sy
