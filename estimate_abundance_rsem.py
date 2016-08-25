@@ -10,16 +10,28 @@ import get_gene_trans_map
 
  
 def rsemSE(transcripts, reads, outprefix):
-    prep = 'rsem-prepare-reference --bowtie2 --transcript-to-gene-map '+transcripts+'.gene_trans_map '+transcripts+' '+outprefix
-    estimate = 'rsem-calculate-expression --bowtie2 '+reads+' '+outprefix+' '+outprefix
+    build = 'bowtie2-build '+transcripts+' '+transcripts+'.bowtie2'
+    prep = 'rsem-prepare-reference  --transcript-to-gene-map '+transcripts+'.gene_trans_map '+transcripts+' '+transcripts+'.RSEM'
+    bowtie = 'bowtie2 --no-mixed --no-discordant --gbar 1000 --end-to-end -k 200  -q -x '+transcripts+'.bowtie2 -U '+reads+' -p 4 | samtools view -F 4 -S -b -o '+outprefix+'.bowtie2.bam -'
+    estimate = 'rsem-calculate-expression     -p 4 --fragment-length-mean 200 --fragment-length-sd 80   --no-bam-output --bam '+outprefix+'.bowtie2.bam '+transcripts+'.RSEM '+outprefix
+    os.system(build)
     os.system(prep)
-    os.system(estimate)
-    
-def rsemPE(PATH, transcripts, left_reads, right_reads, outprefix):    
-    prep = 'rsem-prepare-reference --bowtie2 --transcript-to-gene-map '+transcripts+'.gene_trans_map '+transcripts+' '+outprefix
-    estimate = 'rsem-calculate-expression --bowtie2 --paired_end '+left_reads+' '+right_reads+' '+outprefix+' '+outprefix
-    os.system(prep)
+    os.system(bowtie)
     os.system(estimate)    
+    os.system('rm *bowtie*')
+    os.system('rm *RSEM*')
+    
+def rsemPE(transcripts, left_reads, right_reads, outprefix): 
+    build = 'bowtie2-build '+transcripts+' '+transcripts+'.bowtie2'
+    prep = 'rsem-prepare-reference  --transcript-to-gene-map '+transcripts+'.gene_trans_map '+transcripts+' '+transcripts+'.RSEM'
+    bowtie = 'bowtie2 --no-mixed --no-discordant --gbar 1000 --end-to-end -k 200  -q -X 800 -x '+transcripts+'.bowtie2 -1 '+left_reads+' -2 '+right_reads+' -p 4 | samtools view -F 4 -S -b -o '+outprefix+'.bowtie2.bam -'
+    estimate = 'rsem-calculate-expression  --paired-end   -p 4    --no-bam-output --bam '+outprefix+'.bowtie2.bam '+transcripts+'.RSEM '+outprefix
+    os.system(build)
+    os.system(prep)
+    os.system(bowtie)
+    os.system(estimate)    
+    os.system('rm *bowtie*')
+    os.system('rm *RSEM*')
     
 if __name__ == "__main__":
     if len(sys.argv) == 3:
