@@ -131,7 +131,7 @@ def main(args):
                 filenames[cogid] = '%s/%s.faa' % (cogid[:5],cogid)
     
     print >>sys.stderr, "Processed %d total proteins" % numseqs
-    with open('%s/cogfiles.txt' % args.dest, 'w') as outh:
+    with open('%s/fungroups.txt' % args.dest, 'w') as outh:
         for k in sorted(filenames.keys()):
             print >>outh, '%s\t%s\t%d' % (k, filenames[k], seqcounts[k])
 

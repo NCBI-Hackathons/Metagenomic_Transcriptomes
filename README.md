@@ -14,7 +14,7 @@ Install MetaTate
 
 ```bash
 git clone https://github.com/NCBI-Hackathons/Metagenomic_Transcriptomes.git
-export PATH=$PWD/Metagenomic_Transcriptomes.git/bin
+export PATH=$PWD/Metagenomic_Transcriptomes/bin:$PATH
 ```
 
 Install dependencies
@@ -26,6 +26,10 @@ wget https://ftp-trace.ncbi.nlm.nih.gov/sra/sdk/2.7.0/sratoolkit.2.7.0-centos_li
 tar xzf sratoolkit.2.7.0-centos_linux64.tar.gz
 export PATH=$PWD/sratoolkit.2.7.0-centos_linux64/bin:$PATH
 ```
+
+```
+build_COG_db
+
 
 ## Example run command:
 
