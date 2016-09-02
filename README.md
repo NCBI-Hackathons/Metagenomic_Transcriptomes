@@ -10,6 +10,23 @@ Python 2.7
 ## Directions to acquire code:
 Clone the repository to a directory on your computer
 
+Install MetaTate
+
+```bash
+git clone https://github.com/NCBI-Hackathons/Metagenomic_Transcriptomes.git
+export PATH=$PWD/Metagenomic_Transcriptomes.git/bin
+```
+
+Install dependencies
+
+### `tblastn_vdb` (SRA Toolkit)
+
+```bash
+wget https://ftp-trace.ncbi.nlm.nih.gov/sra/sdk/2.7.0/sratoolkit.2.7.0-centos_linux64.tar.gz
+tar xzf sratoolkit.2.7.0-centos_linux64.tar.gz
+export PATH=$PWD/sratoolkit.2.7.0-centos_linux64/bin:$PATH
+```
+
 ## Example run command:
 
 
